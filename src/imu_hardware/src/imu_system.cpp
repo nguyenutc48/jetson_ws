@@ -42,11 +42,12 @@ hardware_interface::return_type IMUHardware::configure(
 std::vector<hardware_interface::StateInterface> IMUHardware::export_state_interfaces()
 {
     std::vector<hardware_interface::StateInterface> state_interfaces;
-    // for (auto i = 0u; i < info_.sensors[0].state_interfaces.size(); i++)
-    // {
-    //   state_interfaces.emplace_back(
-    //       StateInterface(info_.sensors[0].name, info_.sensors[0].state_interfaces[i].name, &imu_sensor_state_[i]));
-    // }
+
+    for (auto i = 0u; i < info_.sensors[0].state_interfaces.size(); i++)
+    {
+      state_interfaces.emplace_back(
+          hardware_interface::StateInterface(info_.sensors[0].name, info_.sensors[0].state_interfaces[i].name, &imu_sensor_state_[i]));
+    }
 
     return state_interfaces;
 }
