@@ -18,7 +18,10 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <cmath>
 #include "sensor-imu/imu.h"
+#include <geometry_msgs/msg/quaternion.hpp>
+#include <tf2/LinearMath/Quaternion.h>
 
 #include "hardware_interface/base_interface.hpp"
 #include "hardware_interface/handle.hpp"
@@ -32,15 +35,11 @@
 #include "rclcpp/macros.hpp"
 #include "visibility_control.h"
 
+    namespace imu_hardware{
+        class IMUHardware: public hardware_interface::BaseInterface <hardware_interface::SensorInterface>
+        {
 
-namespace imu_hardware
-{
-  class IMUHardware
-      : public hardware_interface::BaseInterface<hardware_interface::SensorInterface>
-  {
-
-  public:
-    RCLCPP_SHARED_PTR_DEFINITIONS(IMUHardware);
+            public :RCLCPP_SHARED_PTR_DEFINITIONS(IMUHardware);
 
     IMU_HARDWARE_PUBLIC
     hardware_interface::return_type configure(const hardware_interface::HardwareInfo &info) override;
@@ -65,6 +64,9 @@ namespace imu_hardware
 
   private:
     std::vector<double> imu_sensor_state_;
+    imut *imu;
+    error *err;
+    
 };
 
 }  // namespace IMU_HARDWARE

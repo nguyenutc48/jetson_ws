@@ -43,7 +43,7 @@ agv_base_controller:
     #publish_limited_velocity: true
     use_stamped_vel: false
     
-    position_feedback: false
+    position_feedback: true
 
     # velocity computation filtering
     velocity_rolling_window_size: 1

@@ -74,42 +74,55 @@ def generate_launch_description():
     spawn_imu_controller = Node(
         package="controller_manager",
         executable="spawner.py",
-        arguments=["imu_broadcaster"],
+        arguments=[
+            "imu_broadcaster",
+            "--controller-manager",
+            "/controller_manager",
+            ],
         output="screen",
     )
 
     spawn_dd_controller = Node(
         package="controller_manager",
         executable="spawner.py",
-        arguments=["agv_base_controller"],
+        arguments=[
+            "agv_base_controller",
+            "--controller-manager",
+            "/controller_manager",
+            ],
         output="screen",
     )
+
     spawn_jsb_controller = Node(
         package="controller_manager",
         executable="spawner.py",
-        arguments=["joint_state_broadcaster"],
+        arguments=[
+            "joint_state_broadcaster",
+            "--controller-manager",
+            "/controller_manager",
+            ],
         output="screen",
     )
 
-    # rviz_config_file = PathJoinSubstitution(
-    #     [FindPackageShare("diffbot_description"), "config", "diffbot.rviz"]
-    # )
-    # rviz_node = Node(
-    #     package="rviz2",
-    #     executable="rviz2",
-    #     name="rviz2",
-    #     arguments=["-d", rviz_config_file],
-    #     condition=IfCondition(LaunchConfiguration("start_rviz")),
-    # )
+    scan_node =  Node(
+        package='rplidar_ros',
+        executable='rplidar_composition',
+        output='screen',
+        parameters=[{
+            'serial_port': '/dev/ttyUSB0',
+            'frame_id': 'laser_link',
+            'angle_compensate': True,
+            'scan_mode': 'Standard'
+        }]
+    )
 
     return LaunchDescription(
         [
-            # arg_show_rviz,
             node_robot_state_publisher,
             controller_manager_node,
             spawn_imu_controller,
             spawn_dd_controller,
             spawn_jsb_controller,
-            # rviz_node,
+            scan_node,
         ]
     )
