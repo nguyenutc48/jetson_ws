@@ -32,13 +32,7 @@ hardware_interface::return_type IMUHardware::configure(
   {
     return hardware_interface::return_type::ERROR;
   }
-
-  err = imu_init(&imu, "/dev/i2c-1", IMU_ACC_RANGE_2G, IMU_GYRO_RANGE_250DPS);
-  if (err != NULL)
-  {
-    return hardware_interface::return_type::ERROR;
-  }
-
+  setbuf(stdout, NULL);
   imu_sensor_state_.resize(info_.sensors[0].state_interfaces.size(), 0.0);
 
   status_ = hardware_interface::status::CONFIGURED;
@@ -62,6 +56,11 @@ hardware_interface::return_type IMUHardware::start()
 {
   RCLCPP_INFO(rclcpp::get_logger("IMUHardware"), "Starting ...please wait...");
 
+  err = imu_init(&imu, "/dev/i2c-1", IMU_ACC_RANGE_2G, IMU_GYRO_RANGE_250DPS);
+  if (err != NULL)
+  {
+    return hardware_interface::return_type::ERROR;
+  }
 
   status_ = hardware_interface::status::STARTED;
 
@@ -76,7 +75,7 @@ hardware_interface::return_type IMUHardware::stop()
 
   imu_destroy(imu);
 
-      status_ = hardware_interface::status::STOPPED;
+  status_ = hardware_interface::status::STOPPED;
 
   RCLCPP_INFO(rclcpp::get_logger("IMUHardware"), "System successfully stopped!");
 

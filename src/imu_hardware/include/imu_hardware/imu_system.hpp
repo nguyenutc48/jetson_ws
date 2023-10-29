@@ -66,7 +66,6 @@
     std::vector<double> imu_sensor_state_;
     imut *imu;
     error *err;
-    
 };
 
 }  // namespace IMU_HARDWARE
