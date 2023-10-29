@@ -63,12 +63,18 @@ def generate_launch_description():
             "stdout": "screen",
             "stderr": "screen",
         },
+        remappings=[
+            # ("/imu_sensor_node/imu", "/_imu/data_raw"),
+            # ("~/motors_cmd", "/_motors_cmd"),
+            # ("~/motors_response", "/_motors_response"),
+            ("/agv_base_controller/cmd_vel_unstamped", "/cmd_vel"),
+        ],
     )
 
     spawn_dd_controller = Node(
         package="controller_manager",
         executable="spawner.py",
-        arguments=["diffbot_base_controller"],
+        arguments=["agv_base_controller"],
         output="screen",
     )
     spawn_jsb_controller = Node(
