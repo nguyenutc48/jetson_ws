@@ -71,6 +71,13 @@ def generate_launch_description():
         ],
     )
 
+    spawn_imu_controller = Node(
+        package="controller_manager",
+        executable="spawner.py",
+        arguments=["imu_broadcaster"],
+        output="screen",
+    )
+
     spawn_dd_controller = Node(
         package="controller_manager",
         executable="spawner.py",
@@ -100,6 +107,7 @@ def generate_launch_description():
             # arg_show_rviz,
             node_robot_state_publisher,
             controller_manager_node,
+            spawn_imu_controller,
             spawn_dd_controller,
             spawn_jsb_controller,
             # rviz_node,
