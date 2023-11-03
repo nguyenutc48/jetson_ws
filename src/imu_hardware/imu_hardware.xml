@@ -1,9 +1,0 @@
-<library path="imu_hardware">
-  <class name="imu_hardware/IMUHardware"
-         type="imu_hardware::IMUHardware"
-         base_class_type="hardware_interface::SensorInterface">
-    <description>
-      The IMU ROS2 control AGV
-    </description>
-  </class>
-</library>

@@ -1,0 +1,16 @@
+<library path="nbot_hardware">
+  <class name="nbot_hardware/NbotWheelsController"
+         type="nbot_hardware::NbotWheelsController"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      The ROS2 control AGV
+    </description>
+  </class>
+  <class name="nbot_hardware/NbotImuSensor"
+         type="nbot_hardware::NbotImuSensor"
+          base_class_type="hardware_interface::SensorInterface">
+    <description>
+      IMU sensor broadcaster for Nbot
+    </description>
+  </class>
+</library>
