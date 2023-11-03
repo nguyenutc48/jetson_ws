@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(nbot_hardware)
+project(nbot_hardware_interfaces)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
@@ -37,7 +37,7 @@ ament_target_dependencies(
 )
 
 #sudo apt install libserial-dev
-target_link_libraries(nbot_hardware serial ) #-lwiringPi
+target_link_libraries(nbot_hardware_interfaces serial ) #-lwiringPi
 
 pluginlib_export_plugin_description_file(hardware_interface nbot_hardware_interfaces.xml)
 
