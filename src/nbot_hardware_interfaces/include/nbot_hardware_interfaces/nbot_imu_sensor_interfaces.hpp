@@ -20,6 +20,7 @@
 #include "realtime_tools/realtime_publisher.h"
 
 #include "sensor_msgs/msg/imu.hpp"
+#include "std_msgs/msg/string.hpp"
 
 namespace nbot_hardware_interfaces
 {
@@ -29,6 +30,7 @@ namespace nbot_hardware_interfaces
 	using CommandInterface = hardware_interface::CommandInterface;
 
 	using Imu = sensor_msgs::msg::Imu;
+	using String = std_msgs::msg::String;
 
 	class NbotImuSensor 
 	: public hardware_interface::BaseInterface<hardware_interface::SensorInterface>
@@ -56,8 +58,10 @@ namespace nbot_hardware_interfaces
 		void cleanup_node();
 
 		realtime_tools::RealtimeBox<std::shared_ptr<Imu>> received_imu_msg_ptr_{nullptr};
+		// realtime_tools::RealtimeBox<std::shared_ptr<String>> received_imu_msg_ptr_{nullptr};
 
 		rclcpp::Subscription<Imu>::SharedPtr imu_subscriber_ = nullptr;
+		// rclcpp::Subscription<String>::SharedPtr imu_subscriber_ = nullptr;
 
 		std::vector<double> imu_sensor_state_;
 
@@ -66,6 +70,7 @@ namespace nbot_hardware_interfaces
 		std::shared_ptr<rclcpp::Node> node_;
 
 		void imu_cb(const std::shared_ptr<Imu> msg);
+		// void imu_cb(const std::shared_ptr<String> msg);
 		rclcpp::executors::MultiThreadedExecutor executor_;
 		std::unique_ptr<std::thread> executor_thread_;
 

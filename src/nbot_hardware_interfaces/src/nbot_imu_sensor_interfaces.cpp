@@ -3,10 +3,11 @@
 #include <string>
 #include <vector>
 
-// #include "rclcpp/logging.hpp"
+#include "rclcpp/logging.hpp"
 
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "rclcpp/rclcpp.hpp"
+
 
 namespace nbot_hardware_interfaces
 {
@@ -15,7 +16,7 @@ namespace nbot_hardware_interfaces
 	{
 		RCLCPP_INFO(rclcpp::get_logger("NbotImuSensor"), "Initializing");
 
-		if (hardware_interface::SensorInterface::configure(info) != hardware_interface::return_type::OK)
+		if (configure_default(info) != hardware_interface::return_type::OK)
 		{
 			return hardware_interface::return_type::ERROR;
 		}
@@ -26,9 +27,12 @@ namespace nbot_hardware_interfaces
 		connection_check_period_ms_ = std::stoul(info_.hardware_parameters["connection_check_period_ms"]);
 
 		node_ = std::make_shared<rclcpp::Node>("imu_sensor_node");
+
 		executor_.add_node(node_);
 		executor_thread_ =
 			std::make_unique<std::thread>(std::bind(&rclcpp::executors::MultiThreadedExecutor::spin, &executor_));
+
+		RCLCPP_INFO(rclcpp::get_logger("NbotImuSensor"), "Initialized");
 
 		return hardware_interface::return_type::OK;
 	}
@@ -51,11 +55,17 @@ namespace nbot_hardware_interfaces
 		imu_subscriber_.reset();
 	}
 
-	void NbotImuSensor::imu_cb(const std::shared_ptr<Imu> msg)
+	void NbotImuSensor::imu_cb(const std::shared_ptr<sensor_msgs::msg::Imu> msg)
 	{
 		RCLCPP_DEBUG(node_->get_logger(), "Received imu message");
 		received_imu_msg_ptr_.set(std::move(msg));
 	}
+
+	// void NbotImuSensor::imu_cb(const std::shared_ptr<String> msg)
+	// {
+	// 	RCLCPP_DEBUG(node_->get_logger(), "Received imu message");
+	// 	received_imu_msg_ptr_.set(std::move(msg));
+	// }
 
 	hardware_interface::return_type NbotImuSensor::start()
 	{
@@ -67,9 +77,12 @@ namespace nbot_hardware_interfaces
 		}
 
 		imu_subscriber_ = node_->create_subscription<Imu>("~/imu", rclcpp::SensorDataQoS(),
-														  std::bind(&NbotImuSensor::imu_cb, this, std::placeholders::_1));
+																			std::bind(&NbotImuSensor::imu_cb, this, std::placeholders::_1));
+		// imu_subscriber_ = node_->create_subscription<std_msgs::msg::String>("~/nguyen", rclcpp::SensorDataQoS(),
+		// 																	std::bind(&NbotImuSensor::imu_cb, this, std::placeholders::_1));
 
 		std::shared_ptr<Imu> imu_msg;
+		// std::shared_ptr<String> imu_msg;
 		for (uint wait_time = 0; wait_time <= connection_timeout_ms_; wait_time += connection_check_period_ms_)
 		{
 			RCLCPP_WARN(rclcpp::get_logger("NbotImuSensor"), "Feedback message from imu wasn't received yet");
@@ -104,6 +117,7 @@ namespace nbot_hardware_interfaces
 	hardware_interface::return_type NbotImuSensor::read()
 	{
 		std::shared_ptr<Imu> imu_msg;
+		// std::shared_ptr<String> imu_msg;
 		received_imu_msg_ptr_.get(imu_msg);
 
 		RCLCPP_INFO(rclcpp::get_logger("NbotImuSensor"), "Reading...");
